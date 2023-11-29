@@ -1,0 +1,35 @@
+#!/bin/bash
+
+check=false
+path=""
+while test $# != 0
+do
+    case "$1" in
+    -c|--check) 
+        check=true ;;
+    -p|--path)
+        path="$2";
+        shift ;;
+    *) echo -e "[\033[1;36minfo\033[0m] Unknown argument \"$1\"" ;;
+    esac
+    shift
+done
+
+suffixes="*.{ts,tsx,js,jsx,css,html}"
+if [ -n "$(which prettier)" ]; then
+    if [ -z "$path" ]; then
+        glob="**/$suffixes"
+    else
+        if [ "${path: -1}" = "/" ]; then
+            path="${path::-1}"
+        fi
+        glob="$path/**/$suffixes"
+    fi
+    mode="--write"
+    if [ "$check" = true ]; then
+        mode="--check"
+    fi
+    prettier $mode $glob --config .prettierrc
+else
+    echo -e "[\033[1;31merror\033[0m] prettier not found"
+fi
