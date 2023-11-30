@@ -5,6 +5,10 @@ import { toNewDiaryEntry } from '../utils';
 const diaryRouter = express.Router();
 
 diaryRouter.get('/', (_req, res) => {
+    res.json(diaryService.getEntries());
+});
+
+diaryRouter.get('/nonsensitive', (_req, res) => {
     res.json(diaryService.getNonSensitiveEntries());
 });
 
